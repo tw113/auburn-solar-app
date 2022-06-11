@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap');
+@import 'common/styles/colors';
+
+body {
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  font-weight: 400;
+  font-size: 32px;
+  margin: 0.3em;
+}
+
+h2 {
+  color: #666;
+  font-weight: 400;
+  font-size: 22px;
+  margin: 0;
+  margin-bottom: 0.25em;
+}
+
+h3 {
+  text-align: center;
+  color: #999;
+  font-weight: 400;
+  font-size: 16px;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: $co_mainBlue;
+}
+
+button {
+  border: none;
+  background-color: $co_backgroundColor;
+}
+
+hr {
+  width: 100%;
+  border: solid rgb(231, 231, 231) 1px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  margin-top: 1em;
+  width: 90vw;
+
+  h2 {
+    align-self: start;
+  }
+
+  input {
+    margin-bottom: 1em;
+    margin-left: 2em;
+    margin-right: 2em;
+    padding: 1em;
+    border: solid rgb(167, 167, 167) 0.150em;
+    border-radius: 0.3em;
+    width: 90%;
+
+    &::placeholder {
+      color: rgb(187, 187, 187);
+    }
+  }
+}
+
+.btn {
+  margin: 1em;
+  padding: 0.7em;
+  font-size: 20px;
+  font-weight: 100;
+  letter-spacing: 0.05em;
+  max-width: fit-content;
+  border-radius: 3px;
+
+  &__filled {
+    background-color: $co_mainBlue;
+    color: white;
+  }
+
+  &__outline {
+    background-color: white;
+    color: $co_mainBlue;
+    border: solid $co_mainBlue 2px;
+  }
+}
+
+.justify-left {
+  justify-self: left;
+}

@@ -1,26 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './AppHeader.scss';
+import { MdMenu, MdClose } from 'react-icons/md';
 
-import AppMenu from '../AppMenu/AppMenu'
-import { MdMenu } from 'react-icons/md'
+const mainColor = '#3470E4';
 
-const mainColor = '#3470E4'
+const AppHeader = () => {
+  const [showMenu, setShowMenu] = useState(false);
 
-let showMenu = false;
+  const showMenuHandler = () => {
+    setShowMenu(!showMenu);
+  };
 
-const AppHeader = () => (
-  <div className="AppHeader">
-    <div className="flex">
-      <img src="images/auburn_solar_logo_sm.jpg" alt="Auburn Solar Logo"/>
-      <div><MdMenu onClick={toggleShowMenu()} size="2.5em" color={mainColor}/></div>
+  return (
+    <div className="AppHeader">
+      <div className="flex">
+        <img src="images/auburn_solar_logo_sm.jpg" alt="Auburn Solar Logo" />
+        <button onClick={showMenuHandler}>
+          {showMenu ? (
+            <MdClose size="3em" color={mainColor} />
+          ) : (
+            <MdMenu size="3em" color={mainColor} />
+          )}
+        </button>
+      </div>
+      <nav className="navBar">
+        <ul className={`navMenu ${showMenu ? 'navMenuOpen' : 'navMenuClosed'}`}>
+          <li>Home</li>
+          <li>Maintenence Request</li>
+          <li>Login</li>
+        </ul>
+      </nav>
     </div>
-    <AppMenu showMenu={showMenu}></AppMenu>
-  </div>
-);
-
-const toggleShowMenu = () => {
-  showMenu = !showMenu;
-}
-
+  );
+};
 
 export default AppHeader;

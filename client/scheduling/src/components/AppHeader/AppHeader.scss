@@ -1,6 +1,31 @@
+@import "../../common/styles/colors";
+
 .flex {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 1.5em;
+}
+
+.navBar {
+  position: relative;
+}
+
+.navMenu {
+  list-style-type: none;
+  padding: 0;
+
+  li {
+    padding: 1.5em;
+    border-bottom: lightgray solid 1px;
+    color: $co_mainBlue;
+  }
+}
+
+.navMenuClosed {
+  display: none;
+}
+
+.navMenuOpen {
+  display: block;
 }
