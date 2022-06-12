@@ -29,6 +29,7 @@ const AppFooter = () => {
           <img src="images/bbb.png" alt="bbb-icon"/>
         </a>
       </div>
+      <img src="images/generac.png" alt="Generac Authorized Dealer"/>
       <h3>© 2020 by Auburn Solar</h3>
     </div>
   )
