@@ -1,0 +1,39 @@
+@import "../../common/styles/colors";
+
+.time-container {
+  width: 80vw;
+  margin: auto;
+
+  ul {
+    margin: auto;
+    padding: 1em;
+    display: grid;
+    grid-template-columns: 50fr 50fr;
+    grid-template-rows: auto;
+    row-gap: 1em;
+    column-gap: 1em;
+    justify-items: stretch;
+
+    li {
+      list-style-type: none;
+  
+      button {
+        width: 100%;
+        padding: 1em;
+        border: 0.125em solid $co_mainBlue;
+        border-radius: 0.3em;
+        font-size: 1em;
+        font-weight: 400;
+        color: $co_mainBlue;
+      }
+    }
+  }
+
+  button {
+    
+    &.selected {
+      background-color: $co_mainBlue;
+      color: white;
+    }
+  }
+}
