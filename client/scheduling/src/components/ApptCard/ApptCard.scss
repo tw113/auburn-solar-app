@@ -1,0 +1,31 @@
+@import "../../common/styles/colors";
+
+.card {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  row-gap: 1em;
+  background-color: #F4F4F4;
+  margin-bottom: 1em;
+  padding: 1em;
+
+  &__timebox {
+    color: $co_mainBlue;
+
+    &--time {
+      font-size: 28px;
+    }
+  }
+
+  &__infobox {
+    text-align: right;
+
+    &--title {
+      font-size: 22px;
+    }
+  }
+
+  &__notes {
+    width: 100%;
+  }
+}

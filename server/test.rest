@@ -1,0 +1,20 @@
+#Auth Endpoints
+POST http://locahost:8080/login HTTP/1.1
+Content-Type: application/json
+
+{
+   "email": "theBatman@test.com",
+   "password": "bestSuperNum1"
+}
+
+###
+
+PUT http://localhost:8080/signup HTTP/1.1
+Content-Type: application/json
+
+{
+   "firstName": "Bruce",
+   "lastName": "Wayne",
+   "email": "theBatman@test.com",
+   "password": "bestSuperNum1",
+}

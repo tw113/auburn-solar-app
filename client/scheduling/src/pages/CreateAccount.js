@@ -7,7 +7,7 @@ const CreateAccount = props => {
   return (
     <div className="flex-center">
       <h1>Create Account</h1>
-      <h3>Already have an account? <Link to="/">Login</Link></h3>
+      <h3>Already have an account? <Link to="/login">Login</Link></h3>
       <InfoForm></InfoForm>
       <button className="btn btn__filled">Create Account</button>
       <hr/>

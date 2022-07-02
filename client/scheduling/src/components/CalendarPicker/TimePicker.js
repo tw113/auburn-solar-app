@@ -1,16 +1,9 @@
 import React, { useState } from 'react';
 import './TimePicker.scss';
+import { convertToTimeString } from '../../common/utils/helpers';
 
 const TimePicker = (props) => {
   const [selected, setSelected] = useState({index: 0});
-
-  const convertToTimeString = (availableDate) => {
-    return availableDate.toLocaleString('en-US', {
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true,
-    });
-  };
 
   const toggleSelected = (i) => {
     setSelected({index: i});
@@ -21,9 +14,8 @@ const TimePicker = (props) => {
     <div className="time-container">
       <ul>
         {props.timeList.map((ad, index) => (
-          <li>
+          <li key={index}>
             <button
-              key={index}
               onClick={toggleSelected.bind(this, index)}
               className={selected.index === index ? 'selected': ''}
             >

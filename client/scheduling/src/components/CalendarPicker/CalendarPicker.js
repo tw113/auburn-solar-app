@@ -2,21 +2,70 @@ import React, { useState } from 'react';
 import './CalendarPicker.scss';
 import Calendar from 'react-calendar';
 import TimePicker from './TimePicker';
+import { Request } from '../../models/request';
+
+//dummy data
+const requests = [
+  new Request(
+    1,
+    1,
+    'Tanner',
+    'Wilson',
+    '123 street rd',
+    'Auburn',
+    'CA',
+    '14kw Generator',
+    new Date(2022, 5, 29, 8),
+    'This is a note from the customer'
+  ),
+  new Request(
+    2,
+    1,
+    'Jobby',
+    'Joesian',
+    '123 street rd',
+    'Sacramento',
+    'CA',
+    '14kw Generator',
+    new Date(2022, 5, 29, 15, 30),
+    'This is a note from the customer'
+  ),
+  new Request(
+    3,
+    2,
+    'Doodeedoo',
+    'Shoobydoo',
+    '123 street rd',
+    'Grass Valley',
+    'CA',
+    '14kw Generator',
+    new Date(2022, 5, 30, 14),
+    'This is a note from the customer'
+  ),
+  new Request(
+    3,
+    2,
+    'Doodeedoo',
+    'Shoobydoo',
+    '123 street rd',
+    'Grass Valley',
+    'CA',
+    '14kw Generator',
+    new Date(2022, 6, 1, 9),
+    'This is a note from the customer'
+  ),
+];
 
 const CalendarPicker = () => {
-  const [selectedDate, setDate] = useState(new Date());
   const [selectedTime, setTime] = useState(new Date());
   const dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-  const availableDates = [
-    new Date(2022, 5, 20, 8),
-    new Date(2022, 5, 21, 9),
-    new Date(2022, 5, 21, 9, 30),
-    new Date(2022, 5, 21, 10),
-    new Date(2022, 5, 24, 13),
-    new Date(2022, 5, 24, 14),
-    new Date(2022, 5, 24, 15, 30),
-    new Date(2022, 5, 24, 16),
-  ];
+  const availableDates = [];
+
+  requests.forEach((request) => {
+    availableDates.push(request.time);
+  });
+
+  const [selectedDate, setDate] = useState(availableDates[0]);
 
   const timeList = availableDates.filter((ad) => {
     return ad.toDateString() === selectedDate.toDateString();
@@ -29,7 +78,7 @@ const CalendarPicker = () => {
   const timeChangeHandler = (nextValue) => {
     setTime(nextValue);
     console.log(selectedTime);
-  }
+  };
 
   return (
     <div>
@@ -43,7 +92,7 @@ const CalendarPicker = () => {
           minDetail="month"
           maxDetail="month"
           tileClassName={({ date }) => {
-            if (date.getDate() === selectedDate.getDate()) {
+            if (date.toDateString() === selectedDate.toDateString()) {
               return 'selected';
             }
           }}

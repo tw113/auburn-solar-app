@@ -11,6 +11,7 @@ const InfoForm = () => {
         <input name="email" type="text" placeholder="Email"/>
         <input name="phoneNumber" type="text" placeholder="Phone Number"/>
         <input name="generator" type="text" placeholder="Generator Size"/>
+        <input name="notes" type="text" placeholder="Notes (i.e. gate code, dog, etc."/>
       </form>
     </div>
   )

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from "react-router-dom";
 import './AppHeader.scss';
 import { MdMenu, MdClose } from 'react-icons/md';
 
@@ -25,9 +26,8 @@ const AppHeader = () => {
       </div>
       <nav className="navBar">
         <ul className={`navMenu ${showMenu ? 'navMenuOpen' : 'navMenuClosed'}`}>
-          <li>Home</li>
-          <li>Maintenence Request</li>
-          <li>Login</li>
+          <Link to="/login"><li>Login</li></Link>
+          <Link to="/"><li>Maintenence Request</li></Link>
         </ul>
       </nav>
     </div>
