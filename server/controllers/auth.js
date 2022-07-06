@@ -2,6 +2,7 @@
 
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
+const jwt = require("jsonwebtoken");
 
 const User = require('../models/user');
 
@@ -40,5 +41,52 @@ exports.signup = (req, res, next) => {
         err.statusCode = 500;
       }
       next(err);
+    });
+};
+
+exports.login = (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors.array());
+    return res.status(422).json({
+      errorMessage: errors.array()[0].errorMessage,
+      validationErrors: errors.array(),
+    });
+  }
+
+  User.findOne({ email: email })
+    .then((user) => {
+      if (user) {
+        bcrypt.compare(password, user.password).then((result) => {
+          if (result) {
+            //Create new signature packed into jsonwebtoken
+            const token = jwt.sign(
+              {
+                userId: user._id.toString(),
+                email: user.email,
+              },
+              process.env.JWT_SECRET,
+              { expiresIn: "1h" }
+            );
+            res.status(200).json({
+              message: "Successfully Logged In",
+              userId: user._id.toString(),
+              token: token,
+            });
+          } else {
+            res.status(400).json({ message: "Invalid user information" });
+          }
+        });
+      } else {
+        res.status(401).json({ message: "User not found" });
+      }
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };

@@ -1,0 +1,8 @@
+{
+  "env": {
+    "MONGO_USER": "admin",
+    "MONGO_PASSWORD": "DCdiEunDSvIRqs8P",
+    "MONGO_DATABASE": "GeneratorRequests",
+    "JWT_SECRET": "superdupersecrettoken"
+  }
+}
