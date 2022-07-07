@@ -1,29 +1,26 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useContext } from "react";
+import { Routes, Route } from "react-router-dom";
 import Layout from "./pages/Layout";
 import CreateAccount from "./pages/CreateAccount";
 import NotFound from "./pages/NotFound";
 import Request from "./pages/Request";
-import PickDate from "./pages/PickDate";
-import WorkerUpcoming from "./pages/WorkerUpcoming";
 import Login from "./pages/Login";
-import Success from "./pages/Success";
+import AuthContext from "./auth/auth-context";
+import WorkerUpcoming from "./pages/WorkerUpcoming";
 
 function App() {
+  const authContext = useContext(AuthContext);
+
   return (
-    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Request />} />
-          <Route path="login" element={<Login />} />
-          <Route path="create-account" element={<CreateAccount />} />
-          <Route path="pick-date" element={<PickDate />} />
-          <Route path="success" element={<Success />} />
-          <Route path="upcoming" element={<WorkerUpcoming />} />
+          {!authContext.isLoggedIn && (<Route path="login" element={<Login />} />)}
+          {!authContext.isLoggedIn && (<Route path="create-account" element={<CreateAccount />} />)}
+          {authContext.isLoggedIn && (<Route path="upcoming" element={<WorkerUpcoming />} />)}
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
-    </BrowserRouter>
   );
 }
 

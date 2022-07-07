@@ -1,15 +1,28 @@
-import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import './AppHeader.scss';
 import { MdMenu, MdClose } from 'react-icons/md';
+import AuthContext from '../../auth/auth-context';
 
 const mainColor = '#3470E4';
 
 const AppHeader = () => {
   const [showMenu, setShowMenu] = useState(false);
 
+  const authContext = useContext(AuthContext);
+
+  const isLoggedIn = authContext.isLoggedIn;
+
+  const logoutHandler = () => {
+    authContext.logout();
+  };
+
   const showMenuHandler = () => {
     setShowMenu(!showMenu);
+  };
+
+  const clickHandler = () => {
+    setShowMenu(false);
   };
 
   return (
@@ -24,10 +37,28 @@ const AppHeader = () => {
           )}
         </button>
       </div>
-      <nav className="navBar">
+      <nav onClick={clickHandler} className="navBar">
         <ul className={`navMenu ${showMenu ? 'navMenuOpen' : 'navMenuClosed'}`}>
-          <Link to="/login"><li>Login</li></Link>
-          <Link to="/"><li>Maintenence Request</li></Link>
+          {authContext.role === 1 && (
+            <li>
+              <Link to="/upcoming">Upcoming Appointments</Link>
+            </li>
+          )}
+          {!isLoggedIn && (
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+          )}
+          <Link to="/">
+            <li>Maintenence Request</li>
+          </Link>
+          {isLoggedIn && (
+            <li>
+              <Link to="/login" onClick={logoutHandler}>
+                Logout
+              </Link>
+            </li>
+          )}
         </ul>
       </nav>
     </div>

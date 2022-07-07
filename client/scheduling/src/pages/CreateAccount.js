@@ -1,9 +1,10 @@
 import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 // import InfoForm from '../components/InfoForm/InfoForm';
 // import { FcGoogle } from 'react-icons/fc'
 
 const CreateAccount = (props) => {
+  const navigate = useNavigate();
   const firstNameRef = useRef();
   const lastNameRef = useRef();
   const emailRef = useRef();
@@ -29,9 +30,18 @@ const CreateAccount = (props) => {
       headers: {
         'Content-Type': 'application/json',
       },
-    }).then((res) => {
-      console.log(res.json());
-    });
+    })
+      .then((res) => {
+        if (res.ok) {
+          //success
+          return res.json();
+        } else {
+          console.log(res.json());
+        }
+      })
+      .then((data) => {
+        navigate('/login', {replace: true});
+      });
   };
 
   return (

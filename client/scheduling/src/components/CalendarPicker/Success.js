@@ -1,5 +1,5 @@
 import React from 'react'
-import InfoLogin from '../components/InfoLogin/InfoLogin';
+import InfoLogin from '../InfoLogin/InfoLogin';
 
 const Success = props => {
   return (

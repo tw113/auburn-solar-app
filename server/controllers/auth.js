@@ -27,7 +27,7 @@ exports.signup = (req, res, next) => {
         password: hashedPassword,
         firstName: firstName,
         lastName: lastName,
-        role: 1,
+        role: 0, // lowest permissions (customer)
       });
       return user.save();
     })
@@ -74,6 +74,7 @@ exports.login = (req, res, next) => {
             res.status(200).json({
               message: "Successfully Logged In",
               userId: user._id.toString(),
+              role: user.role,
               token: token,
             });
           } else {
