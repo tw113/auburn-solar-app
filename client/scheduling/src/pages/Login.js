@@ -34,8 +34,8 @@ const Login = (props) => {
         }
       })
       .then((data) => {
-        authContext.login(data.token, data.role);
-        //console.log(data);
+        authContext.login(data.token, data.email, `${data.firstName} ${data.lastName}`, data.role);
+        console.log(data);
         switch (data.role) {
           case 0:
             navigate('/', { replace: true });

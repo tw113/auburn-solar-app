@@ -7,13 +7,13 @@ const ApptCard = (props) => {
     <div className="card">
       <div className="card__timebox">
         <div className="card__timebox--time">
-          {convertToTimeString(props.request.time, true, false)}
+          {convertToTimeString(props.request.chosenDatetime, true, false)}
         </div>
-        <div>{convertToTimeString(props.request.time, false, true)}</div>
+        <div>{convertToTimeString(props.request.chosenDatetime, false, true)}</div>
       </div>
       <div className="card__infobox">
-        <div className="card__infobox--title">{props.request.generator}</div>
-        <div>{props.request.address}</div>
+        <div className="card__infobox--title">{props.request.generatorType}</div>
+        <div>{props.request.address1}</div>
         <div>
           {props.request.city}, {props.request.state}
         </div>
@@ -21,7 +21,7 @@ const ApptCard = (props) => {
       <div className="card__notes">
         <strong>Customer: </strong>{props.request.lastName}
         <h5>Customer Notes</h5>
-        {props.request.notes}
+        {props.request.customerNotes}
       </div>
     </div>
   );

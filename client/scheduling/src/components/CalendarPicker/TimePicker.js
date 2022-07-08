@@ -13,13 +13,13 @@ const TimePicker = (props) => {
   return (
     <div className="time-container">
       <ul>
-        {props.timeList.map((ad, index) => (
+        {props.timeList.map((timeslot, index) => (
           <li key={index}>
             <button
               onClick={toggleSelected.bind(this, index)}
               className={selected.index === index ? 'selected': ''}
             >
-              {convertToTimeString(ad)}
+              {convertToTimeString(timeslot.datetime)}
             </button>
           </li>
         ))}

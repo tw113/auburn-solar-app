@@ -1,88 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './CalendarPicker.scss';
 import Calendar from 'react-calendar';
 import TimePicker from './TimePicker';
-import { Request } from '../../models/request';
-
-//dummy data
-const requests = [
-  new Request(
-    1,
-    1,
-    'Tanner',
-    'Wilson',
-    '123 street rd',
-    'Auburn',
-    'CA',
-    '14kw Generator',
-    new Date(2022, 5, 29, 8),
-    'This is a note from the customer'
-  ),
-  new Request(
-    2,
-    1,
-    'Jobby',
-    'Joesian',
-    '123 street rd',
-    'Sacramento',
-    'CA',
-    '14kw Generator',
-    new Date(2022, 5, 29, 15, 30),
-    'This is a note from the customer'
-  ),
-  new Request(
-    3,
-    2,
-    'Doodeedoo',
-    'Shoobydoo',
-    '123 street rd',
-    'Grass Valley',
-    'CA',
-    '14kw Generator',
-    new Date(2022, 5, 30, 14),
-    'This is a note from the customer'
-  ),
-  new Request(
-    3,
-    2,
-    'Doodeedoo',
-    'Shoobydoo',
-    '123 street rd',
-    'Grass Valley',
-    'CA',
-    '14kw Generator',
-    new Date(2022, 6, 1, 9),
-    'This is a note from the customer'
-  ),
-];
 
 const CalendarPicker = () => {
-  const [selectedTime, setTime] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [openTimeslots, setOpenTimeslots] = useState([]);
   const dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-  const availableDates = [];
 
-  requests.forEach((request) => {
-    availableDates.push(request.time);
-  });
+  const fetchTimeslotsHandler = () => {
+    fetch('http://localhost:8080/schedule/timeslots')
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        const loadedTimeslots = [];
 
-  const [selectedDate, setDate] = useState(availableDates[0]);
+        data.timeslots.forEach(timeslot => {
+          loadedTimeslots.push({
+            id: timeslot._id,
+            workerId: timeslot.workerId,
+            datetime: new Date(timeslot.datetime),
+            isBooked: timeslot.isBooked
+          })
+        });
+        setOpenTimeslots(loadedTimeslots);
+        setSelectedDate(loadedTimeslots[0].datetime);
+        setSelectedTime(loadedTimeslots[0].datetime);
+      });
+  };
 
-  const timeList = availableDates.filter((ad) => {
-    return ad.toDateString() === selectedDate.toDateString();
-  });
+  useEffect(() => {
+    fetchTimeslotsHandler();
+  }, []);
+  
 
   function onDateChange(nextValue) {
-    setDate(nextValue);
+    setSelectedDate(nextValue);
   }
 
   const timeChangeHandler = (nextValue) => {
-    setTime(nextValue);
-    console.log(selectedTime);
+    setSelectedTime(nextValue);
   };
 
   return (
     <div>
       <div className="calendar-container">
+        {/* <ul>
+          {openTimeslots.map((timeslot, index) => {
+            return <li key={index}>{timeslot.datetime}</li>;
+          })}
+        </ul> */}
         <Calendar
           onChange={onDateChange}
           minDate={new Date(Date.now)}
@@ -98,10 +67,10 @@ const CalendarPicker = () => {
           }}
           tileDisabled={({ activeStartDate, date, view }) => {
             if (
-              !availableDates.some(
+              !openTimeslots.some(
                 (x) =>
-                  x.getDate() === date.getDate() &&
-                  x.getMonth() === date.getMonth()
+                  x.datetime.getDate() === date.getDate() &&
+                  x.datetime.getMonth() === date.getMonth()
               ) ||
               date.getDay() === 0 ||
               date < Date.now()
@@ -116,7 +85,7 @@ const CalendarPicker = () => {
       <div className="time-container">
         <TimePicker
           onTimeChange={timeChangeHandler}
-          timeList={timeList}
+          timeList={openTimeslots}
           value={selectedTime}
         ></TimePicker>
       </div>

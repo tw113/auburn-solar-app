@@ -23,12 +23,6 @@ const userSchema = new Schema({
     ref: 'Role',
     required: true
   },
-  assignedRequests: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Request'
-    }
-  ]
 }, {timestamps: true});
 
 module.exports = mongoose.model('User', userSchema);

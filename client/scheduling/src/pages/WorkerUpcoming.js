@@ -1,52 +1,37 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import DayCard from '../components/DayCard/DayCard';
-import { Request } from '../models/request';
 import { convertToDayAndDate } from '../common/utils/helpers';
-
-//dummy data
-const requests = [
-  new Request(
-    1,
-    1,
-    'Tanner',
-    'Wilson',
-    '123 street rd',
-    'Auburn',
-    'CA',
-    '14kw Generator',
-    new Date(2022, 5, 29, 8),
-    'This is a note from the customer'
-  ),
-  new Request(
-    2,
-    1,
-    'Jobby',
-    'Joesian',
-    '123 street rd',
-    'Sacramento',
-    'CA',
-    '14kw Generator',
-    new Date(2022, 5, 29, 15, 30),
-    'This is a note from the customer'
-  ),
-  new Request(
-    3,
-    2,
-    'Doodeedoo',
-    'Shoobydoo',
-    '123 street rd',
-    'Grass Valley',
-    'CA',
-    '14kw Generator',
-    new Date(2022, 5, 30, 14),
-    'This is a note from the customer'
-  ),
-];
+import AuthContext from '../auth/auth-context';
 
 const WorkerUpcoming = () => {
-  const fullName = 'John Doe';
-  const workerId = 1;
-  const requestsFiltered = requests.filter((x) => (x.workerId = workerId));
+  const authContext = useContext(AuthContext);
+  const [requests, setRequests] = useState([]);
+
+  const fetchRequestsHandler = () => {
+    fetch('http://localhost:8080/request/requests', {
+      headers: {
+        Authorization: `Bearer ${authContext.token}`,
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        const loadedRequests = [];
+
+        data.requests.forEach((request) => {
+          loadedRequests.push({
+            ...request,
+            chosenDatetime: new Date(request.chosenDatetime),
+          });
+        });
+        setRequests(loadedRequests);
+      });
+  };
+
+  useEffect(() => {
+    fetchRequestsHandler();
+  }, []);
 
   let daysToShow = [];
   for (let i = 0; i < 10; i++) {
@@ -55,11 +40,9 @@ const WorkerUpcoming = () => {
     daysToShow.push(date);
   }
 
-  console.log(daysToShow);
-
   return (
     <div>
-      <h1 className="justify-left">{fullName}</h1>
+      <h1 className="justify-left">{authContext.getName()}</h1>
       <button className="btn btn__filled">Set Schedule</button>
       <hr />
       <div className="content-container">
@@ -68,9 +51,11 @@ const WorkerUpcoming = () => {
           {daysToShow.map((day, i) => (
             <li key={i}>
               <DayCard
-              day={convertToDayAndDate(new Date(day))}
-              requests={requestsFiltered.filter(x => x.time.toDateString() === day.toDateString())}
-            />
+                day={convertToDayAndDate(new Date(day))}
+                requests={requests.filter(
+                  (x) => x.chosenDatetime.toDateString() === day.toDateString()
+                )}
+              />
             </li>
           ))}
         </ul>

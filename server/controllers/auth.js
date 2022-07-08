@@ -2,7 +2,7 @@
 
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
@@ -48,6 +48,8 @@ exports.login = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 
+  const expiration = '1h';
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     console.log(errors.array());
@@ -69,20 +71,24 @@ exports.login = (req, res, next) => {
                 email: user.email,
               },
               process.env.JWT_SECRET,
-              { expiresIn: "1h" }
+              { expiresIn: expiration }
             );
             res.status(200).json({
-              message: "Successfully Logged In",
+              message: 'Successfully Logged In',
               userId: user._id.toString(),
               role: user.role,
               token: token,
+              expiresIn: expiration,
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
             });
           } else {
-            res.status(400).json({ message: "Invalid user information" });
+            res.status(400).json({ message: 'Invalid user information' });
           }
         });
       } else {
-        res.status(401).json({ message: "User not found" });
+        res.status(401).json({ message: 'User not found' });
       }
     })
     .catch((err) => {

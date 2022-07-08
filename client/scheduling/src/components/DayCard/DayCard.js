@@ -8,8 +8,8 @@ const DayCard = (props) => {
       <h4>{props.day}</h4>
       {Object.keys(props.requests).length === 0 ? <h5>No Appointments</h5> : ""}
       <ul>
-          {props.requests.map(request => (
-            <li key={request.id}>
+          {props.requests.map((request, index) => (
+            <li key={index}>
               <ApptCard request={request} />
             </li>
           ))}
