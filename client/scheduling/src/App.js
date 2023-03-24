@@ -6,7 +6,7 @@ import NotFound from "./pages/NotFound";
 import Request from "./pages/Request";
 import Login from "./pages/Login";
 import AuthContext from "./auth/auth-context";
-import WorkerUpcoming from "./pages/WorkerUpcoming";
+import WorkerDashboard from "./pages/WorkerDashboard";
 
 function App() {
   const authContext = useContext(AuthContext);
@@ -17,7 +17,7 @@ function App() {
           <Route index element={<Request />} />
           {!authContext.isLoggedIn && (<Route path="login" element={<Login />} />)}
           {!authContext.isLoggedIn && (<Route path="create-account" element={<CreateAccount />} />)}
-          {authContext.isLoggedIn && (<Route path="upcoming" element={<WorkerUpcoming />} />)}
+          {authContext.isLoggedIn && (authContext.role > 0) && (<Route path="dashboard" element={<WorkerDashboard />} />)}
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

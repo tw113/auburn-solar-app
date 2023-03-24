@@ -1,11 +1,13 @@
-const Timeslot = require('../models/timeslot');
+// schedule controller
+const mongoose = require('mongoose');
+const User = require('../models/user');
 
-exports.getOpenTimeslots = (req, res, next) => {
-  Timeslot.find({ isBooked: false })
-    .then((timeslots) => {
+exports.getBlockedTimesByWorkerId = (req, res, next) => {
+  User.findOne({ workerId: req.userId })
+    .then((user) => {
       res.status(200).json({
         message: 'open timeslots fetched',
-        timeslots: timeslots,
+        blockedTimes: user.blockedTime,
       });
     })
     .catch((err) => {
@@ -16,19 +18,22 @@ exports.getOpenTimeslots = (req, res, next) => {
     });
 };
 
-exports.postTimeslot = (req, res, next) => {
-  const newTimeslot = new Timeslot({
-    datetime: new Date(2022, 7, 7, 9),
-    workerId: '62c521fa008ce6eef9a08184',
-  });
+exports.postBlockedTime = (req, res, next) => {
+  const newBlockedTimes = req.body;
+  //console.log(newBlockedTimes);
+  User.findOne({ workerId: req.userId })
+    .then((user) => {
+      if(user.blockedTime) {
+        user.blockedTime = newBlockedTimes;
+      } else {
+        user.blockedTime = []
+      }
 
-  newTimeslot
-    .save()
-    .then((result) => {
+      return user.save();
+    })
+    .then(() => {
       res.status(201).json({
-        message: 'timeslot created',
-        timeslotId: result._id,
-        timeslot: result,
+        message: 'timeslots added',
       });
     })
     .catch((err) => {

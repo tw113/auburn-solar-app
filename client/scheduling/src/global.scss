@@ -71,10 +71,8 @@ form {
     align-self: start;
   }
 
-  input {
+  input, select {
     margin-bottom: 1em;
-    margin-left: 2em;
-    margin-right: 2em;
     padding: 1em;
     border: solid rgb(167, 167, 167) 0.150em;
     border-radius: 0.3em;
@@ -83,6 +81,10 @@ form {
     &::placeholder {
       color: rgb(187, 187, 187);
     }
+  }
+
+  label, select {
+    width: 100%;
   }
 }
 

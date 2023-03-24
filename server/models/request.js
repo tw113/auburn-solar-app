@@ -11,6 +11,14 @@ const requestSchema = new Schema(
       type: String,
       required: true,
     },
+    email: {
+      type: String,
+      required: false,
+    },
+    phone: {
+      type: Number,
+      required: true,
+    },
     address1: {
       type: String,
       required: true,
@@ -23,32 +31,27 @@ const requestSchema = new Schema(
       type: String,
       required: true,
     },
-    zip: {
-      type: Number,
-      required: true,
-    },
-    generatorType: {
+    apptType: {
       type: String,
       required: true,
     },
-    chosenDatetime: {
+    startDatetime: {
       type: Date,
       required: true,
     },
-    chosenTimeslotId: {
-      type: Schema.Types.ObjectId,
-      ref: 'Opening',
+    endDatetime: {
+      type: Date,
       required: true,
     },
     workerId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true
+      required: true,
     },
     customerNotes: {
       type: String,
     },
-    email: {
+    workerNotes: {
       type: String,
     },
   },

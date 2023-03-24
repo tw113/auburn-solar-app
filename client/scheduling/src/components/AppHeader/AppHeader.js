@@ -39,9 +39,9 @@ const AppHeader = () => {
       </div>
       <nav onClick={clickHandler} className="navBar">
         <ul className={`navMenu ${showMenu ? 'navMenuOpen' : 'navMenuClosed'}`}>
-          {authContext.role === 1 && (
+          {authContext.role > 0 && (
             <li>
-              <Link to="/upcoming">Upcoming Appointments</Link>
+              <Link to="/dashboard">Dashboard</Link>
             </li>
           )}
           {!isLoggedIn && (

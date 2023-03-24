@@ -1,12 +1,13 @@
 const express = require('express');
 const { body } = require('express-validator');
 
-const Timeslot = require('../models/timeslot');
-
 const scheduleController = require('../controllers/schedule');
+const isAuth = require('../middleware/isAuth');
 
 const router = express.Router();
 
-router.get('/timeslots', scheduleController.getOpenTimeslots);
+router.get('/times', isAuth, scheduleController.getBlockedTimesByWorkerId);
+
+router.post('/add-block', isAuth, scheduleController.postBlockedTime);
 
 module.exports = router;

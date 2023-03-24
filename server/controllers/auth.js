@@ -5,6 +5,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
+const Role = require('../models/role');
+//const ApptType = require('../models/appt_type');
 
 exports.signup = (req, res, next) => {
   const errors = validationResult(req);
@@ -27,7 +29,18 @@ exports.signup = (req, res, next) => {
         password: hashedPassword,
         firstName: firstName,
         lastName: lastName,
-        role: 0, // lowest permissions (customer)
+        roleId: '62ccd144d521b973f4ff3121', // lowest permissions (customer)
+        blockedTime: [ // default saturday off
+          { startDatetime: '2022-07-16T14:00:00.000Z', weekday: 'S' },
+          { startDatetime: '2022-07-16T15:00:00.000Z', weekday: 'S' },
+          { startDatetime: '2022-07-16T16:00:00.000Z', weekday: 'S' },
+          { startDatetime: '2022-07-16T17:00:00.000Z', weekday: 'S' },
+          { startDatetime: '2022-07-16T18:00:00.000Z', weekday: 'S' },
+          { startDatetime: '2022-07-16T19:00:00.000Z', weekday: 'S' },
+          { startDatetime: '2022-07-16T20:00:00.000Z', weekday: 'S' },
+          { startDatetime: '2022-07-16T21:00:00.000Z', weekday: 'S' },
+          { startDatetime: '2022-07-16T22:00:00.000Z', weekday: 'S' },
+        ],
       });
       return user.save();
     })
@@ -44,11 +57,11 @@ exports.signup = (req, res, next) => {
     });
 };
 
-exports.login = (req, res, next) => {
+exports.login = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  const expiration = '1h';
+  const expiration = '24h';
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -59,7 +72,7 @@ exports.login = (req, res, next) => {
     });
   }
 
-  User.findOne({ email: email })
+  await User.findOne({ email: email })
     .then((user) => {
       if (user) {
         bcrypt.compare(password, user.password).then((result) => {
@@ -73,16 +86,21 @@ exports.login = (req, res, next) => {
               process.env.JWT_SECRET,
               { expiresIn: expiration }
             );
-            res.status(200).json({
-              message: 'Successfully Logged In',
-              userId: user._id.toString(),
-              role: user.role,
-              token: token,
-              expiresIn: expiration,
-              email: user.email,
-              firstName: user.firstName,
-              lastName: user.lastName,
-            });
+            Role.findById(user.roleId.toString())
+              .then((role) => {
+                res.status(200).json({
+                  message: 'Successfully Logged In',
+                  token: token,
+                  expiresIn: expiration,
+                  user: user,
+                  role: role.level,
+                });
+              })
+              .catch((err) => {
+                const error = new Error('User not found.');
+                error.statusCode = 404;
+                throw error;
+              });
           } else {
             res.status(400).json({ message: 'Invalid user information' });
           }

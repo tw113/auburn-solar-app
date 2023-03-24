@@ -3,42 +3,68 @@ import './CalendarPicker.scss';
 import Calendar from 'react-calendar';
 import TimePicker from './TimePicker';
 
-const CalendarPicker = () => {
-  const [selectedTime, setSelectedTime] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(new Date());
+const CalendarPicker = (props) => {
+  const initialDatetime = new Date();
+  initialDatetime.setHours(0, 0, 0, 0);
+  const [selectedTime, setSelectedTime] = useState(initialDatetime);
+  const [selectedDate, setSelectedDate] = useState(initialDatetime);
   const [openTimeslots, setOpenTimeslots] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
-  const fetchTimeslotsHandler = () => {
-    fetch('http://localhost:8080/schedule/timeslots')
+  const fetchTimeslotsHandler = (selectedDate) => {
+    setIsLoading(true);
+    const searchDate = `${selectedDate.getFullYear()}-${
+      selectedDate.getMonth() + 1
+    }-${selectedDate.getDate()}`;
+
+    fetch(`http://localhost:8080/request/times/${searchDate}`)
       .then((response) => {
         return response.json();
       })
       .then((data) => {
-        const loadedTimeslots = [];
+        const blockedTimes = [];
 
-        data.timeslots.forEach(timeslot => {
-          loadedTimeslots.push({
-            id: timeslot._id,
-            workerId: timeslot.workerId,
-            datetime: new Date(timeslot.datetime),
-            isBooked: timeslot.isBooked
-          })
-        });
-        setOpenTimeslots(loadedTimeslots);
-        setSelectedDate(loadedTimeslots[0].datetime);
-        setSelectedTime(loadedTimeslots[0].datetime);
+        if (data.blockedTimes) {
+          data.blockedTimes.forEach((time) => {
+            blockedTimes.push({
+              startDatetime: new Date(time.startDatetime),
+            });
+          });
+        }
+
+        let openTimeslots = [];
+
+        for (let i = 7; i < 16; i++) {
+          let newTime = new Date(selectedDate);
+          newTime.setHours(i);
+
+          if (
+            !blockedTimes.some(
+              (time) => time.startDatetime.getHours() === newTime.getHours()
+            )
+          ) {
+            openTimeslots.push({
+              time: new Date(newTime),
+            });
+          }
+        }
+
+        setOpenTimeslots(openTimeslots);
+        setSelectedTime(openTimeslots[0].startDatetime);
+
+        setIsLoading(false);
       });
   };
 
   useEffect(() => {
-    fetchTimeslotsHandler();
+    fetchTimeslotsHandler(selectedDate);
   }, []);
-  
 
-  function onDateChange(nextValue) {
+  const onDateChange = (nextValue) => {
     setSelectedDate(nextValue);
-  }
+    fetchTimeslotsHandler(nextValue);
+  };
 
   const timeChangeHandler = (nextValue) => {
     setSelectedTime(nextValue);
@@ -47,14 +73,8 @@ const CalendarPicker = () => {
   return (
     <div>
       <div className="calendar-container">
-        {/* <ul>
-          {openTimeslots.map((timeslot, index) => {
-            return <li key={index}>{timeslot.datetime}</li>;
-          })}
-        </ul> */}
         <Calendar
           onChange={onDateChange}
-          minDate={new Date(Date.now)}
           calendarType="US"
           next2Label={null}
           prev2Label={null}
@@ -66,15 +86,7 @@ const CalendarPicker = () => {
             }
           }}
           tileDisabled={({ activeStartDate, date, view }) => {
-            if (
-              !openTimeslots.some(
-                (x) =>
-                  x.datetime.getDate() === date.getDate() &&
-                  x.datetime.getMonth() === date.getMonth()
-              ) ||
-              date.getDay() === 0 ||
-              date < Date.now()
-            ) {
+            if (date.getDay() === 0 || date < Date.now()) {
               return true;
             }
           }}
@@ -83,11 +95,13 @@ const CalendarPicker = () => {
         />
       </div>
       <div className="time-container">
-        <TimePicker
-          onTimeChange={timeChangeHandler}
-          timeList={openTimeslots}
-          value={selectedTime}
-        ></TimePicker>
+        {!isLoading && (
+          <TimePicker
+            onTimeChange={timeChangeHandler}
+            timeList={openTimeslots}
+            value={selectedTime}
+          ></TimePicker>
+        )}
       </div>
     </div>
   );

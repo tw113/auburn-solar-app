@@ -34,16 +34,17 @@ const Login = (props) => {
         }
       })
       .then((data) => {
-        authContext.login(data.token, data.email, `${data.firstName} ${data.lastName}`, data.role);
-        console.log(data);
+        authContext.login(data.token, data.user.email, `${data.user.firstName} ${data.user.lastName}`, data.role);
+        //console.log(data);
         switch (data.role) {
           case 0:
             navigate('/', { replace: true });
             break;
           case 1:
-            navigate('/upcoming', { replace: true });
-            break;
           case 2:
+            navigate('/dashboard', { replace: true });
+            break;
+          case 3:
             // TODO: go to admin page
             // for now:
             navigate('/', { replace: true });
