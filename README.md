@@ -16,3 +16,8 @@ This app will allow customers to schedule maintenance requests and allow workers
 - React.js
 - Node.js
 - MongoDB
+
+## Screenshots
+![screenshot1](https://github.com/tw113/auburn-solar-app/blob/main/screenshots/desktop.png)
+![screenshot2](https://github.com/tw113/auburn-solar-app/blob/main/screenshots/tablet.png)
+![screenshot3](https://github.com/tw113/auburn-solar-app/blob/main/screenshots/mobile.png)
